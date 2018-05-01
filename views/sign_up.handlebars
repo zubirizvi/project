@@ -1,0 +1,297 @@
+<script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyC0bAThBMWV6CegISuCMXX2HqjlCYu7Y28",
+    authDomain: "chat-app-6e468.firebaseapp.com",
+    databaseURL: "https://chat-app-6e468.firebaseio.com",
+    projectId: "chat-app-6e468",
+    storageBucket: "chat-app-6e468.appspot.com",
+    messagingSenderId: "121813521575"
+  };
+  firebase.initializeApp(config);
+</script>
+<style>
+  *, *:before, *:after {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Nunito', sans-serif;
+  color: #384047;
+}
+
+form {
+  max-width: 300px;
+  margin: 10px auto;
+  padding: 10px 20px;
+  background: #f4f7f8;
+  border-radius: 8px;
+}
+
+h1 {
+  margin: 0 0 30px 0;
+  text-align: center;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="date"],
+input[type="datetime"],
+input[type="email"],
+input[type="number"],
+input[type="search"],
+input[type="tel"],
+input[type="time"],
+input[type="url"],
+textarea,
+select {
+  background: rgba(255,255,255,0.1);
+  border: none;
+  font-size: 16px;
+  height: auto;
+  margin: 0;
+  outline: 0;
+  padding: 15px;
+  width: 100%;
+  background-color: #e8eeef;
+  color: #8a97a0;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.03) inset;
+  margin-bottom: 30px;
+}
+
+input[type="radio"],
+input[type="checkbox"] {
+  margin: 0 4px 8px 0;
+}
+
+select {
+  padding: 6px;
+  height: 32px;
+  border-radius: 2px;
+}
+
+button {
+  padding: 19px 39px 18px 39px;
+  color: #FFF;
+  background-color: #B97EBB;
+  font-size: 18px;
+  text-align: center;
+  font-style: normal;
+  border-radius: 5px;
+  width: 100%;
+  border: 1px solid #B97EBB;
+  border-width: 1px 1px 3px;
+  box-shadow: 0 -1px 0 rgba(255,255,255,0.1) inset;
+  margin-bottom: 10px;
+}
+
+fieldset {
+  margin-bottom: 30px;
+  border: none;
+}
+
+legend {
+  font-size: 1.4em;
+  margin-bottom: 10px;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+}
+
+label.light {
+  font-weight: 300;
+  display: inline;
+}
+
+.number {
+  background-color: #5fcf80;
+  color: #fff;
+  height: 30px;
+  width: 30px;
+  display: inline-block;
+  font-size: 0.8em;
+  margin-right: 4px;
+  line-height: 30px;
+  text-align: center;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.2);
+  border-radius: 100%;
+}
+
+@media screen and (min-width: 480px) {
+
+  form {
+    max-width: 480px;
+  }
+
+}
+body {
+  background: #f8f9fa!important;
+}
+.lds-ripple {
+  display: inline-block;
+  position: relative;
+  width: 64px;
+  height: 64px;
+  position: absolute;
+  right: 48%;
+  top: 48%;
+}
+.lds-ripple div {
+  position: absolute;
+  border: 4px solid #000;
+  opacity: 1;
+  border-radius: 50%;
+  animation: lds-ripple 1s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+}
+.lds-ripple div:nth-child(2) {
+  animation-delay: -0.5s;
+}
+@keyframes lds-ripple {
+  0% {
+    top: 28px;
+    left: 28px;
+    width: 0;
+    height: 0;
+    opacity: 1;
+  }
+  100% {
+    top: -1px;
+    left: -1px;
+    width: 58px;
+    height: 58px;
+    opacity: 0;
+  }
+}
+.hide {
+  display: none;
+}
+.disable {
+  cursor: none;
+  background: #ccc;
+  border-color: #ccc;
+  color: #000;
+  pointer-events: none;
+}
+#login_succes {
+  display: none;
+}
+</style>
+<div class="loader hide">
+  <div class="lds-ripple"><div></div><div></div></div>
+</div>
+<form action="/user" method="GET" id="login_succes">
+  <input type="hidden" name="user_name" value="Guest" id="user_name">
+</form>
+<form action="/user_register" method="post" id="sign_up_form">
+  <h1>Sign Up</h1>
+    <fieldset>
+        <label for="name">First Name:</label>
+        <input type="text" id="first_name" name="first_name">
+
+        <label for="name">Last Name:</label>
+        <input type="text" id="last_name" name="last_name">
+        
+        <label for="mail">Email:</label>
+        <input type="email" id="mail" name="email">
+        
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password">
+      </fieldset>
+    <button type='submit' id='sign_up_btn' style="cursor: pointer;">Sign Up</button>
+    <a href="/sign_in" class="go_signin" style="float: right;">Already have an account, Log In.</a>
+</form>
+<div>
+<script>
+  $("#sign_up_form").submit(function( event ) {
+    event.preventDefault();
+    var data = $(this).serializeArray();
+
+    /*checking blank value*/
+    for (var i in data) {
+      if (data[i].value == "") {
+        if ((data[i].name).indexOf('_') > -1) {
+          var temp = data[i].name.split('_');
+          temp[0] = temp[0].charAt(0).toUpperCase() + temp[0].slice(1);
+          temp[1] = temp[1].charAt(0).toUpperCase() + temp[1].slice(1);
+          data[i].name = temp[0] + " " + temp[1];
+        } else {
+          data[i].name = data[i].name.charAt(0).toUpperCase() + data[i].name.slice(1);
+        }
+        swal("Ooops..!", "You have not filled " + data[i].name , "error");
+        return false;
+      }
+    }
+
+    /*checking number in name*/
+    for (var i in data) {
+      if (data[i].name == 'first_name' || data[i].name == 'last_name') {
+        if (!isNaN(data[i].value)) {
+          swal("Ooops...!", "First Name or Last Name cannot be number" , "error");
+          return false;
+        }
+      }
+    }
+
+    /*checking password length*/
+    for (var i in data) {
+      if (data[i].name == 'password') {
+        if ((data[i].value.length) <= 5) {
+          swal("Oooh...!", "Password length must be greater than 5" , "error");
+          return false;
+        }
+      }
+    }
+
+  registerUser(data);
+});
+
+function registerUser(data) {
+  $('.loader').show();
+  $('#sign_up_btn').addClass('disable');
+  var email;
+  var ref = firebase.database().ref().child('/user_profile');
+  for (var i in data) {
+    if (data[i].name == 'email') {
+      email = data[i].value;
+      break;
+    }
+  }
+
+  ref.once('value', function(res) {
+    res = res.val();
+    for (var i in res) {
+      if (res[i].email == email) {
+        /*user alrady exits*/
+        $('.loader').hide();
+        $('#sign_up_btn').removeClass('disable');
+        swal("Ooops...!", "User already exists with this email address, use different one." , "error");
+        return false;
+      }
+    }
+
+   /*save user*/
+    $('.loader').hide();
+    $('#sign_up_btn').removeClass('disable');
+    var date = new Date();
+    date = date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear();
+    data.push(
+      {name:'created_on', value: date},
+      {name:'updated_on', value: 0},
+      {name:'status', value: '1'},
+      {name:'type', value: 'user'}
+      );
+    var _data = {};
+    for (var i in data) {
+      _data[data[i].name] = data[i].value;
+    }
+    ref.push(_data);
+    $('#user_name').val(_data.first_name + " " + _data.last_name);
+    $('#login_succes').submit();
+  });
+};
+</script>
