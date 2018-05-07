@@ -1,0 +1,48 @@
+<script src="https://www.gstatic.com/firebasejs/4.13.0/firebase.js"></script>
+<div class="container" style="margin-top: 50px">
+	<div class="row">
+		<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+			<table class="table table-bordered">
+				<thead>
+					<tr>
+						<th>#</th>
+						<th>User Name</th>
+						<th>Email</th>
+						<th>Status</th>
+						<th>Action</th>
+					</tr>
+				</thead>
+				<tbody>
+					
+				</tbody>
+			</table>		
+		</div>
+	</div>
+</div>
+<script>
+	// Initialize Firebase
+	var config = {
+		apiKey: "AIzaSyBsD5lpEe48jIFWVrDZB5iHZMG68Lfc4Ok",
+		authDomain: "hi-guys-a699a.firebaseapp.com",
+		databaseURL: "https://hi-guys-a699a.firebaseio.com",
+		projectId: "hi-guys-a699a",
+		storageBucket: "hi-guys-a699a.appspot.com",
+		messagingSenderId: "217684814513"
+	};
+  	firebase.initializeApp(config);
+  	var ref = firebase.database().ref().child('/user_profile');
+  	ref.once('value', function(res) {
+  		var res = res.val();
+  		var counter = 1;
+  		for (var i in res) {
+  			var row = '<tr><td>'+counter+'</td><td>'+res[i].first_name+ ' '+res[i].last_name+'</td><td>'+res[i].email+'</td><td>'+res[i].status+'</td><td><button class="btn btn-primary btn-sm remove_user" data-user='+i+'>Remove</button></td></tr>';
+  			$('tbody').append(row);
+  			counter++;
+  		}
+  	});
+  	$('body').on('click', '.remove_user', function() {
+  		ref.remove($(this).attr('data-user'));
+  		location.reload();
+  	});
+
+</script>

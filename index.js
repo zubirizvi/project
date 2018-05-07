@@ -10,6 +10,9 @@ app.set('view engine', 'handlebars');
 app.get('/', function(req,res) {
   res.render('home');
 });
+app.get('/admin', function(req,res) {
+  res.render('admin');
+});
 app.get('/user', function(req,res) {
   var userName  = req.query.user_name;
   var userEmail = req.query.user_email;
