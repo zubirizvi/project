@@ -681,6 +681,7 @@ body {
           }
         } 
       }
+      socket.emit('NEW_USER',{email:emailId,name:userName});
     });
   });
 
