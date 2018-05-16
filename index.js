@@ -11,7 +11,15 @@ app.get('/', function(req,res) {
   res.render('home');
 });
 app.get('/admin', function(req,res) {
-  res.render('admin');
+  res.render('admin_auth');
+});
+app.get('/admin_auth', function(req,res) {
+  var adminPassword  = req.query.admin_password;
+  if (adminPassword == "zubi") {
+    res.render('admin');
+  } else {
+    res.render('admin_auth');
+  }
 });
 app.get('/user', function(req,res) {
   var userName  = req.query.user_name;
