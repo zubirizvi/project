@@ -8,6 +8,7 @@
 						<th>#</th>
 						<th>User Name</th>
 						<th>Email</th>
+						<th>Password</th>
 						<th>Status</th>
 						<th>Action</th>
 					</tr>
@@ -35,7 +36,7 @@
   		var res = res.val();
   		var counter = 1;
   		for (var i in res) {
-  			var row = '<tr><td>'+counter+'</td><td>'+res[i].first_name+ ' '+res[i].last_name+'</td><td>'+res[i].email+'</td><td>'+res[i].status+'</td><td><button class="btn btn-primary btn-sm remove_user" data-user='+i+'>Remove</button></td></tr>';
+  			var row = '<tr><td>'+counter+'</td><td>'+res[i].first_name+ ' '+res[i].last_name+'</td><td>'+res[i].email+'</td><td>'+res[i].password+'</td><td>'+res[i].status+'</td><td><button class="btn btn-primary btn-sm remove_user" data-user='+i+'>Remove</button></td></tr>';
   			$('tbody').append(row);
   			counter++;
   		}
